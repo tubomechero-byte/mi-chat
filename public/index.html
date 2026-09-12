@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
     <meta charset="UTF-8">
@@ -22,9 +23,9 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f0f2f5;
             height: 100vh;
             overflow: hidden;
+            background: #f0f2f5;
         }
 
         button,
@@ -32,9 +33,7 @@
             font: inherit;
         }
 
-        /* =========================
-           AUTENTICACIÓN
-        ========================= */
+        /* LOGIN */
 
         #authScreen {
             position: fixed;
@@ -55,27 +54,25 @@
         }
 
         .authBox {
+
             width: 100%;
             max-width: 400px;
+
+            padding: 30px;
 
             background: white;
 
             border-radius: 20px;
 
-            padding: 30px;
+            text-align: center;
 
             box-shadow:
                 0 15px 40px
                 rgba(0,0,0,.25);
-
-            text-align: center;
-        }
-
-        .authBox h1 {
-            margin-top: 0;
         }
 
         .authInput {
+
             width: 100%;
 
             padding: 14px;
@@ -91,42 +88,49 @@
         }
 
         .authButton {
+
             width: 100%;
 
             padding: 14px;
 
-            margin-top: 8px;
+            margin-top: 10px;
 
             border: 0;
 
             border-radius: 10px;
 
-            color: white;
-
             background: #128c7e;
 
-            cursor: pointer;
+            color: white;
 
             font-weight: bold;
+
+            cursor: pointer;
         }
 
         .switchButton {
+
             border: 0;
+
             background: transparent;
+
             color: #075e54;
+
             cursor: pointer;
+
             margin-top: 15px;
         }
 
         #authError {
-            color: #d00000;
+
             min-height: 22px;
+
             margin-top: 10px;
+
+            color: #d00000;
         }
 
-        /* =========================
-           APP
-        ========================= */
+        /* APP */
 
         #app {
             display: none;
@@ -134,6 +138,7 @@
         }
 
         .layout {
+
             display: flex;
 
             height: 100%;
@@ -145,9 +150,7 @@
             background: white;
         }
 
-        /* =========================
-           SIDEBAR
-        ========================= */
+        /* SIDEBAR */
 
         .sidebar {
 
@@ -159,8 +162,6 @@
             display: flex;
 
             flex-direction: column;
-
-            background: #fff;
         }
 
         .sidebarHeader {
@@ -178,8 +179,7 @@
 
             align-items: center;
 
-            justify-content:
-                space-between;
+            justify-content: space-between;
         }
 
         .headerTop h2 {
@@ -188,16 +188,16 @@
 
         .logoutButton {
 
+            padding: 7px 10px;
+
             border: 0;
+
+            border-radius: 8px;
 
             background:
                 rgba(255,255,255,.15);
 
             color: white;
-
-            padding: 7px 10px;
-
-            border-radius: 8px;
 
             cursor: pointer;
         }
@@ -227,9 +227,9 @@
 
             border: 0;
 
-            border-radius: 20px;
-
             outline: none;
+
+            border-radius: 20px;
 
             background: #f0f2f5;
         }
@@ -243,18 +243,18 @@
 
         .user {
 
-            padding: 13px;
-
-            border-bottom:
-                1px solid #eee;
-
             display: flex;
 
             align-items: center;
 
             gap: 12px;
 
+            padding: 13px;
+
             cursor: pointer;
+
+            border-bottom:
+                1px solid #eee;
         }
 
         .user:hover {
@@ -269,13 +269,13 @@
 
             flex-shrink: 0;
 
-            border-radius: 50%;
-
             display: flex;
 
             align-items: center;
 
             justify-content: center;
+
+            border-radius: 50%;
 
             background: #128c7e;
 
@@ -295,21 +295,27 @@
             font-weight: bold;
         }
 
-        .userBottom {
+        .statusRow {
 
-            margin-top: 3px;
+            margin-top: 4px;
 
             display: flex;
 
             align-items: center;
 
-            justify-content:
-                space-between;
+            justify-content: space-between;
         }
 
-        .online {
+        .statusOnline {
 
             color: #18a558;
+
+            font-size: 12px;
+        }
+
+        .statusOffline {
+
+            color: #999;
 
             font-size: 12px;
         }
@@ -322,13 +328,13 @@
 
             padding: 0 6px;
 
-            border-radius: 20px;
-
             display: flex;
 
             align-items: center;
 
             justify-content: center;
+
+            border-radius: 20px;
 
             background: #25d366;
 
@@ -339,9 +345,7 @@
             font-weight: bold;
         }
 
-        /* =========================
-           CHAT
-        ========================= */
+        /* CHAT */
 
         .chat {
 
@@ -382,9 +386,22 @@
 
             margin-top: 3px;
 
-            color: #777;
-
             font-size: 13px;
+
+            color: #777;
+        }
+
+        .back {
+
+            display: none;
+
+            border: 0;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
         }
 
         #messages {
@@ -395,8 +412,7 @@
 
             padding: 20px;
 
-            background-color:
-                #e5ddd5;
+            background: #e5ddd5;
         }
 
         .empty {
@@ -439,7 +455,7 @@
                 0 1px 2px
                 rgba(0,0,0,.15);
 
-            word-wrap: break-word;
+            word-break: break-word;
         }
 
         .mine .bubble {
@@ -461,9 +477,9 @@
 
             margin-top: 5px;
 
-            text-align: right;
-
             color: #777;
+
+            text-align: right;
 
             font-size: 10px;
         }
@@ -514,9 +530,7 @@
             font-size: 20px;
         }
 
-        /* =========================
-           NOTIFICACIÓN
-        ========================= */
+        /* NOTIFICACIONES */
 
         #notifications {
 
@@ -534,9 +548,9 @@
 
         .notification {
 
-            margin-bottom: 10px;
-
             padding: 14px;
+
+            margin-bottom: 10px;
 
             background: white;
 
@@ -553,35 +567,16 @@
         }
 
         .notificationTitle {
-
             font-weight: bold;
-
             margin-bottom: 5px;
         }
 
         .notificationText {
-
             color: #555;
-
             font-size: 14px;
         }
 
-        /* =========================
-           MÓVIL
-        ========================= */
-
-        .back {
-
-            display: none;
-
-            border: 0;
-
-            background: transparent;
-
-            font-size: 25px;
-
-            cursor: pointer;
-        }
+        /* MOVIL */
 
         @media (max-width: 700px) {
 
@@ -612,9 +607,9 @@
 
 <body>
 
-<!-- ==============================
-     AUTENTICACIÓN
-=============================== -->
+<!-- ======================================
+     LOGIN
+======================================= -->
 
 <div id="authScreen">
 
@@ -629,6 +624,7 @@
         <input
             id="authUsername"
             class="authInput"
+            type="text"
             placeholder="Nombre de usuario"
             maxlength="24"
             autocomplete="username"
@@ -662,15 +658,15 @@
 
 </div>
 
-<!-- ==============================
+<!-- ======================================
      APP
-=============================== -->
+======================================= -->
 
 <div id="app">
 
     <div
-        class="layout"
         id="layout"
+        class="layout"
     >
 
         <aside class="sidebar">
@@ -692,11 +688,8 @@
 
                 <div class="onlineCount">
 
-                    <span id="onlineCount">
-                        0
-                    </span>
-
-                    usuarios conectados
+                    <span id="onlineCount">0</span>
+                    en línea
 
                 </div>
 
@@ -720,15 +713,15 @@
             <header class="chatHeader">
 
                 <button
-                    class="back"
                     id="backButton"
+                    class="back"
                 >
                     ←
                 </button>
 
                 <div
-                    class="avatar"
                     id="headerAvatar"
+                    class="avatar"
                 >
                     ?
                 </div>
@@ -736,17 +729,17 @@
                 <div class="chatInfo">
 
                     <div
-                        class="chatTitle"
                         id="chatTitle"
+                        class="chatTitle"
                     >
                         Selecciona un usuario
                     </div>
 
                     <div
-                        class="chatSubtitle"
                         id="chatSubtitle"
+                        class="chatSubtitle"
                     >
-                        Elige una persona para empezar
+                        Puedes hablar incluso si está desconectado
                     </div>
 
                 </div>
@@ -757,7 +750,8 @@
 
                 <div class="empty">
 
-                    Selecciona un usuario para empezar.
+                    Selecciona un usuario para ver
+                    la conversación.
 
                 </div>
 
@@ -768,8 +762,8 @@
                 <input
                     id="messageInput"
                     placeholder="Escribe un mensaje..."
-                    disabled
                     autocomplete="off"
+                    disabled
                 >
 
                 <button
@@ -792,168 +786,171 @@
 
 <script>
 
-    const socket = io({
-        autoConnect: false
-    });
+const socket = io({
+    autoConnect: false
+});
 
-    let myUsername = "";
+let myUsername = "";
 
-    let selectedUser = "";
+let selectedUser = "";
 
-    let allUsers = [];
+let allUsers = [];
 
-    let authMode = "login";
+let authMode = "login";
 
-    let conversations = {};
+let conversations = {};
 
-    let unread = {};
+let unread = {};
 
-    const authScreen =
-        document.getElementById("authScreen");
+// ==========================================
+// ELEMENTOS
+// ==========================================
 
-    const app =
-        document.getElementById("app");
+const authScreen =
+    document.getElementById("authScreen");
 
-    const authUsername =
-        document.getElementById("authUsername");
+const app =
+    document.getElementById("app");
 
-    const authPassword =
-        document.getElementById("authPassword");
+const authUsername =
+    document.getElementById("authUsername");
 
-    const authButton =
-        document.getElementById("authButton");
+const authPassword =
+    document.getElementById("authPassword");
 
-    const switchAuth =
-        document.getElementById("switchAuth");
+const authButton =
+    document.getElementById("authButton");
 
-    const authDescription =
-        document.getElementById("authDescription");
+const switchAuth =
+    document.getElementById("switchAuth");
 
-    const authError =
-        document.getElementById("authError");
+const authDescription =
+    document.getElementById("authDescription");
 
-    const usersContainer =
-        document.getElementById("users");
+const authError =
+    document.getElementById("authError");
 
-    const searchInput =
-        document.getElementById("searchInput");
+const usersContainer =
+    document.getElementById("users");
 
-    const messagesContainer =
-        document.getElementById("messages");
+const searchInput =
+    document.getElementById("searchInput");
 
-    const messageInput =
-        document.getElementById("messageInput");
+const messagesContainer =
+    document.getElementById("messages");
 
-    const sendButton =
-        document.getElementById("sendButton");
+const messageInput =
+    document.getElementById("messageInput");
 
-    const chatTitle =
-        document.getElementById("chatTitle");
+const sendButton =
+    document.getElementById("sendButton");
 
-    const chatSubtitle =
-        document.getElementById("chatSubtitle");
+const chatTitle =
+    document.getElementById("chatTitle");
 
-    const headerAvatar =
-        document.getElementById("headerAvatar");
+const chatSubtitle =
+    document.getElementById("chatSubtitle");
 
-    const layout =
-        document.getElementById("layout");
+const headerAvatar =
+    document.getElementById("headerAvatar");
 
-    const notifications =
-        document.getElementById("notifications");
+const layout =
+    document.getElementById("layout");
 
-    /* =====================================
-       AUTENTICACIÓN
-    ===================================== */
+const notifications =
+    document.getElementById("notifications");
 
-    switchAuth.addEventListener(
-        "click",
-        () => {
+// ==========================================
+// CAMBIAR LOGIN / REGISTRO
+// ==========================================
 
-            authError.textContent = "";
-
-            if (authMode === "login") {
-
-                authMode = "register";
-
-                authDescription.textContent =
-                    "Crea una cuenta.";
-
-                authButton.textContent =
-                    "Crear cuenta";
-
-                switchAuth.textContent =
-                    "Ya tengo una cuenta";
-
-                authPassword.autocomplete =
-                    "new-password";
-
-            } else {
-
-                authMode = "login";
-
-                authDescription.textContent =
-                    "Inicia sesión para entrar.";
-
-                authButton.textContent =
-                    "Iniciar sesión";
-
-                switchAuth.textContent =
-                    "Crear una cuenta";
-
-                authPassword.autocomplete =
-                    "current-password";
-            }
-
-        }
-    );
-
-    authButton.addEventListener(
-        "click",
-        authenticate
-    );
-
-    authPassword.addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                authenticate();
-            }
-
-        }
-    );
-
-    async function authenticate() {
-
-        const username =
-            authUsername.value.trim();
-
-        const password =
-            authPassword.value;
+switchAuth.addEventListener(
+    "click",
+    () => {
 
         authError.textContent = "";
 
-        if (!username || !password) {
+        if (authMode === "login") {
 
-            authError.textContent =
-                "Completa todos los campos.";
+            authMode = "register";
 
-            return;
+            authDescription.textContent =
+                "Crea una cuenta.";
+
+            authButton.textContent =
+                "Crear cuenta";
+
+            switchAuth.textContent =
+                "Ya tengo una cuenta";
+
+        } else {
+
+            authMode = "login";
+
+            authDescription.textContent =
+                "Inicia sesión para entrar.";
+
+            authButton.textContent =
+                "Iniciar sesión";
+
+            switchAuth.textContent =
+                "Crear una cuenta";
         }
 
-        authButton.disabled = true;
+    }
+);
 
-        try {
+// ==========================================
+// LOGIN / REGISTRO
+// ==========================================
 
-            const endpoint =
-                authMode === "register"
-                    ? "/api/register"
-                    : "/api/login";
+authButton.addEventListener(
+    "click",
+    authenticate
+);
 
-            const response =
-                await fetch(endpoint, {
+authPassword.addEventListener(
+    "keydown",
+    event => {
 
+        if (event.key === "Enter") {
+            authenticate();
+        }
+
+    }
+);
+
+async function authenticate() {
+
+    const username =
+        authUsername.value.trim();
+
+    const password =
+        authPassword.value;
+
+    authError.textContent = "";
+
+    if (!username || !password) {
+
+        authError.textContent =
+            "Completa todos los campos.";
+
+        return;
+    }
+
+    authButton.disabled = true;
+
+    try {
+
+        const endpoint =
+            authMode === "register"
+                ? "/api/register"
+                : "/api/login";
+
+        const response =
+            await fetch(
+                endpoint,
+                {
                     method: "POST",
 
                     headers: {
@@ -965,788 +962,802 @@
                         username,
                         password
                     })
-
-                });
-
-            const data =
-                await response.json();
-
-            if (!response.ok) {
-
-                authError.textContent =
-                    data.error ||
-                    "No se pudo completar la operación.";
-
-                authButton.disabled = false;
-
-                return;
-            }
-
-            // Guardar sesión
-            localStorage.setItem(
-                "chatToken",
-                data.token
+                }
             );
 
-            localStorage.setItem(
-                "chatUsername",
-                data.username
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            authError.textContent =
+                data.error ||
+                "No se pudo completar.";
+
+            authButton.disabled = false;
+
+            return;
+        }
+
+        localStorage.setItem(
+            "chatToken",
+            data.token
+        );
+
+        myUsername =
+            data.username;
+
+        enterApp();
+
+    } catch {
+
+        authError.textContent =
+            "No se pudo conectar con el servidor.";
+    }
+
+    authButton.disabled = false;
+}
+
+// ==========================================
+// COMPROBAR SESIÓN
+// ==========================================
+
+async function checkSavedSession() {
+
+    const token =
+        localStorage.getItem(
+            "chatToken"
+        );
+
+    if (!token) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/session",
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + token
+                    }
+                }
             );
+
+        if (!response.ok) {
+
+            localStorage.removeItem(
+                "chatToken"
+            );
+
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if (data.loggedIn) {
 
             myUsername =
                 data.username;
 
             enterApp();
-
-        } catch (error) {
-
-            authError.textContent =
-                "No se pudo conectar con el servidor.";
-
         }
 
-        authButton.disabled = false;
+    } catch {
+        // Mostrar login.
     }
+}
 
-    /* =====================================
-       COMPROBAR SESIÓN GUARDADA
-    ===================================== */
+// ==========================================
+// ENTRAR EN LA APP
+// ==========================================
 
-    async function checkSavedSession() {
+function enterApp() {
+
+    authScreen.style.display =
+        "none";
+
+    app.style.display =
+        "block";
+
+    socket.connect();
+}
+
+// ==========================================
+// AUTENTICACIÓN SOCKET
+// ==========================================
+
+socket.on(
+    "connect",
+    () => {
 
         const token =
-            localStorage.getItem("chatToken");
+            localStorage.getItem(
+                "chatToken"
+            );
 
         if (!token) {
             return;
         }
 
-        try {
+        socket.emit(
+            "authenticate",
+            token
+        );
+    }
+);
 
-            const response =
-                await fetch(
-                    "/api/session",
-                    {
-                        headers: {
-                            Authorization:
-                                "Bearer " + token
+socket.on(
+    "authenticated",
+    data => {
+
+        myUsername =
+            data.username;
+
+    }
+);
+
+// ==========================================
+// LISTA DE TODOS LOS USUARIOS
+// ==========================================
+
+socket.on(
+    "userList",
+    users => {
+
+        allUsers = users;
+
+        const onlineCount =
+            users.filter(
+                user => user.online
+            ).length;
+
+        document.getElementById(
+            "onlineCount"
+        ).textContent =
+            onlineCount;
+
+        renderUsers();
+    }
+);
+
+function renderUsers() {
+
+    const search =
+        searchInput.value
+            .toLowerCase()
+            .trim();
+
+    usersContainer.innerHTML = "";
+
+    allUsers
+        .filter(user => {
+
+            if (
+                user.username ===
+                myUsername.toLowerCase()
+            ) {
+                return false;
+            }
+
+            return user.displayName
+                .toLowerCase()
+                .includes(search);
+
+        })
+        .forEach(user => {
+
+            const element =
+                document.createElement("div");
+
+            element.className =
+                "user";
+
+            const count =
+                unread[user.username] || 0;
+
+            element.innerHTML = `
+
+                <div class="avatar">
+                    ${escapeHtml(
+                        user.displayName
+                            .charAt(0)
+                            .toUpperCase()
+                    )}
+                </div>
+
+                <div class="userInfo">
+
+                    <div class="userName">
+                        ${escapeHtml(
+                            user.displayName
+                        )}
+                    </div>
+
+                    <div class="statusRow">
+
+                        ${
+                            user.online
+                            ?
+                            `
+                            <div class="statusOnline">
+                                ● En línea
+                            </div>
+                            `
+                            :
+                            `
+                            <div class="statusOffline">
+                                ○ Desconectado
+                            </div>
+                            `
                         }
-                    }
+
+                        ${
+                            count > 0
+                            ?
+                            `
+                            <div class="badge">
+                                ${
+                                    count > 99
+                                    ? "99+"
+                                    : count
+                                }
+                            </div>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
+
+                </div>
+            `;
+
+            element.addEventListener(
+                "click",
+                () => {
+
+                    openChat(
+                        user.username,
+                        user.displayName,
+                        user.online
+                    );
+
+                }
+            );
+
+            usersContainer.appendChild(
+                element
+            );
+        });
+}
+
+searchInput.addEventListener(
+    "input",
+    renderUsers
+);
+
+// ==========================================
+// ABRIR CHAT
+// ==========================================
+
+function openChat(
+    username,
+    displayName,
+    online
+) {
+
+    selectedUser =
+        username;
+
+    unread[username] = 0;
+
+    renderUsers();
+
+    chatTitle.textContent =
+        displayName;
+
+    chatSubtitle.textContent =
+        online
+            ? "● En línea"
+            : "○ Desconectado";
+
+    headerAvatar.textContent =
+        displayName
+            .charAt(0)
+            .toUpperCase();
+
+    messageInput.disabled =
+        false;
+
+    sendButton.disabled =
+        false;
+
+    layout.classList.add(
+        "mobileChat"
+    );
+
+    // Pedir TODO el historial
+    socket.emit(
+        "getConversation",
+        username
+    );
+
+    // Marcar como leídos
+    socket.emit(
+        "markConversationRead",
+        username
+    );
+
+    messageInput.focus();
+}
+
+// ==========================================
+// HISTORIAL
+// ==========================================
+
+socket.on(
+    "conversationHistory",
+    data => {
+
+        conversations[
+            data.username
+        ] =
+            data.messages || [];
+
+        if (
+            selectedUser ===
+            data.username
+        ) {
+
+            renderConversation(
+                data.username
+            );
+        }
+
+    }
+);
+
+function renderConversation(
+    username
+) {
+
+    const list =
+        conversations[
+            username
+        ] || [];
+
+    messagesContainer.innerHTML = "";
+
+    if (!list.length) {
+
+        messagesContainer.innerHTML = `
+
+            <div class="empty">
+
+                Todavía no hay mensajes
+                con este usuario.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+    list.forEach(
+        addMessageToScreen
+    );
+
+    scrollBottom();
+}
+
+function addMessageToScreen(
+    data
+) {
+
+    const empty =
+        messagesContainer.querySelector(
+            ".empty"
+        );
+
+    if (empty) {
+        empty.remove();
+    }
+
+    const mine =
+        data.from === myUsername;
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "messageRow " +
+        (mine ? "mine" : "");
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "bubble";
+
+    const date =
+        new Date(data.time);
+
+    const time =
+        date
+            .getHours()
+            .toString()
+            .padStart(2, "0")
+        +
+        ":"
+        +
+        date
+            .getMinutes()
+            .toString()
+            .padStart(2, "0");
+
+    bubble.innerHTML = `
+
+        ${
+            mine
+            ? ""
+            :
+            `
+            <div class="from">
+                ${escapeHtml(
+                    data.from
+                )}
+            </div>
+            `
+        }
+
+        <div>
+            ${escapeHtml(
+                data.message
+            )}
+        </div>
+
+        <div class="time">
+            ${time}
+        </div>
+    `;
+
+    row.appendChild(
+        bubble
+    );
+
+    messagesContainer.appendChild(
+        row
+    );
+}
+
+function scrollBottom() {
+
+    messagesContainer.scrollTop =
+        messagesContainer.scrollHeight;
+}
+
+// ==========================================
+// CONTADORES
+// ==========================================
+
+socket.on(
+    "unreadCounts",
+    counts => {
+
+        unread =
+            counts || {};
+
+        renderUsers();
+    }
+);
+
+// ==========================================
+// RECIBIR MENSAJE
+// ==========================================
+
+socket.on(
+    "privateMessage",
+    data => {
+
+        const other =
+            data.from === myUsername
+                ? data.to
+                : data.from;
+
+        // Guardarlo en memoria de la página
+        if (
+            !conversations[other]
+        ) {
+            conversations[other] =
+                [];
+        }
+
+        const exists =
+            conversations[other]
+                .some(
+                    msg =>
+                        msg.id ===
+                        data.id
                 );
 
-            if (!response.ok) {
+        if (!exists) {
 
-                localStorage.removeItem(
-                    "chatToken"
-                );
+            conversations[other]
+                .push(data);
+        }
 
-                return;
-            }
+        // Si el chat está abierto
+        if (
+            selectedUser ===
+            other
+        ) {
 
-            const data =
-                await response.json();
+            addMessageToScreen(
+                data
+            );
 
-            if (data.loggedIn) {
+            scrollBottom();
 
-                myUsername =
-                    data.username;
+            socket.emit(
+                "markConversationRead",
+                other
+            );
 
-                enterApp();
+        } else {
 
-            }
+            unread[other] =
+                (unread[other] || 0) + 1;
 
-        } catch {
-            // Si no hay servidor,
-            // mostramos el login.
+            renderUsers();
+
+            showNotification(
+                data.from,
+                data.message,
+                other
+            );
         }
     }
+);
 
-    /* =====================================
-       ENTRAR
-    ===================================== */
+// ==========================================
+// MENSAJE ENVIADO
+// ==========================================
 
-    function enterApp() {
+socket.on(
+    "messageSent",
+    data => {
 
-        authScreen.style.display = "none";
+        const other =
+            data.to;
 
-        app.style.display = "block";
+        if (
+            !conversations[other]
+        ) {
+            conversations[other] =
+                [];
+        }
 
-        socket.connect();
+        const exists =
+            conversations[other]
+                .some(
+                    msg =>
+                        msg.id ===
+                        data.id
+                );
+
+        if (!exists) {
+
+            conversations[other]
+                .push(data);
+        }
+
+        if (
+            selectedUser ===
+            other
+        ) {
+
+            addMessageToScreen(
+                data
+            );
+
+            scrollBottom();
+        }
+    }
+);
+
+// ==========================================
+// ENVIAR MENSAJE
+// ==========================================
+
+sendButton.addEventListener(
+    "click",
+    sendMessage
+);
+
+messageInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+
+    }
+);
+
+function sendMessage() {
+
+    const text =
+        messageInput.value.trim();
+
+    if (
+        !text ||
+        !selectedUser
+    ) {
+        return;
     }
 
-    /* =====================================
-       SOCKET AUTH
-    ===================================== */
+    socket.emit(
+        "privateMessage",
+        {
+            to:
+                selectedUser,
+            message:
+                text
+        }
+    );
 
-    socket.on(
-        "connect",
+    messageInput.value = "";
+
+    messageInput.focus();
+}
+
+// ==========================================
+// NOTIFICACIONES
+// ==========================================
+
+function showNotification(
+    from,
+    text,
+    username
+) {
+
+    const notification =
+        document.createElement("div");
+
+    notification.className =
+        "notification";
+
+    notification.innerHTML = `
+
+        <div class="notificationTitle">
+            💬 ${escapeHtml(from)}
+        </div>
+
+        <div class="notificationText">
+            ${escapeHtml(text)}
+        </div>
+    `;
+
+    notification.addEventListener(
+        "click",
         () => {
+
+            const user =
+                allUsers.find(
+                    item =>
+                        item.username ===
+                        username
+                );
+
+            if (user) {
+
+                openChat(
+                    user.username,
+                    user.displayName,
+                    user.online
+                );
+            }
+
+            notification.remove();
+        }
+    );
+
+    notifications.appendChild(
+        notification
+    );
+
+    setTimeout(
+        () => notification.remove(),
+        6000
+    );
+}
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+document
+    .getElementById("logoutButton")
+    .addEventListener(
+        "click",
+        async () => {
 
             const token =
                 localStorage.getItem(
                     "chatToken"
                 );
 
-            if (!token) {
-                return;
-            }
+            try {
 
-            socket.emit(
-                "authenticate",
-                token
-            );
-        }
-    );
+                await fetch(
+                    "/api/logout",
+                    {
+                        method: "POST",
+                        headers: {
+                            Authorization:
+                                "Bearer " +
+                                token
+                        }
+                    }
+                );
 
-    socket.on(
-        "authenticated",
-        data => {
-
-            myUsername =
-                data.username;
-
-            socket.emit(
-                "getMessages"
-            );
-        }
-    );
-
-    socket.on(
-        "authenticationError",
-        () => {
+            } catch {}
 
             localStorage.removeItem(
                 "chatToken"
             );
 
-            localStorage.removeItem(
-                "chatUsername"
-            );
-
             socket.disconnect();
 
-            app.style.display = "none";
-
-            authScreen.style.display =
-                "flex";
-
-            authError.textContent =
-                "Tu sesión ha caducado.";
-
+            location.reload();
         }
     );
 
-    /* =====================================
-       LISTA DE USUARIOS
-    ===================================== */
-
-    socket.on(
-        "userList",
-        users => {
-
-            allUsers = users;
-
-            document.getElementById(
-                "onlineCount"
-            ).textContent =
-                users.length;
-
-            renderUsers();
-        }
-    );
-
-    function renderUsers() {
-
-        const search =
-            searchInput.value
-                .toLowerCase()
-                .trim();
-
-        usersContainer.innerHTML = "";
-
-        allUsers
-            .filter(
-                username => {
-
-                    if (
-                        username ===
-                        myUsername
-                    ) {
-                        return false;
-                    }
-
-                    return username
-                        .toLowerCase()
-                        .includes(search);
-                }
-            )
-            .forEach(username => {
-
-                const element =
-                    document.createElement("div");
-
-                element.className =
-                    "user";
-
-                const count =
-                    unread[username] || 0;
-
-                element.innerHTML = `
-
-                    <div class="avatar">
-                        ${escapeHtml(
-                            username
-                                .charAt(0)
-                                .toUpperCase()
-                        )}
-                    </div>
-
-                    <div class="userInfo">
-
-                        <div class="userName">
-                            ${escapeHtml(username)}
-                        </div>
-
-                        <div class="userBottom">
-
-                            <div class="online">
-                                ● En línea
-                            </div>
-
-                            ${
-                                count > 0
-                                ?
-                                `
-                                <div class="badge">
-                                    ${
-                                        count > 99
-                                        ? "99+"
-                                        : count
-                                    }
-                                </div>
-                                `
-                                :
-                                ""
-                            }
-
-                        </div>
-
-                    </div>
-                `;
-
-                element.addEventListener(
-                    "click",
-                    () => openChat(username)
-                );
-
-                usersContainer.appendChild(
-                    element
-                );
-            });
-    }
-
-    searchInput.addEventListener(
-        "input",
-        renderUsers
-    );
-
-    /* =====================================
-       ABRIR CHAT
-    ===================================== */
-
-    function openChat(username) {
-
-        selectedUser = username;
-
-        unread[username] = 0;
-
-        renderUsers();
-
-        chatTitle.textContent =
-            username;
-
-        chatSubtitle.textContent =
-            "● En línea";
-
-        headerAvatar.textContent =
-            username
-                .charAt(0)
-                .toUpperCase();
-
-        messageInput.disabled = false;
-
-        sendButton.disabled = false;
-
-        layout.classList.add(
-            "mobileChat"
-        );
-
-        renderConversation(username);
-
-        messageInput.focus();
-
-        socket.emit(
-            "markConversationRead",
-            {
-                username
-            }
-        );
-    }
-
-    /* =====================================
-       MOSTRAR CHAT
-    ===================================== */
-
-    function renderConversation(username) {
-
-        const list =
-            conversations[username] || [];
-
-        messagesContainer.innerHTML = "";
-
-        if (!list.length) {
-
-            messagesContainer.innerHTML = `
-                <div class="empty">
-                    Todavía no hay mensajes con
-                    ${escapeHtml(username)}.
-                </div>
-            `;
-
-            return;
-        }
-
-        list.forEach(
-            addMessageToScreen
-        );
-
-        scrollBottom();
-    }
-
-    function addMessageToScreen(data) {
-
-        const empty =
-            messagesContainer.querySelector(
-                ".empty"
-            );
-
-        if (empty) {
-            empty.remove();
-        }
-
-        const mine =
-            data.from === myUsername;
-
-        const row =
-            document.createElement("div");
-
-        row.className =
-            "messageRow " +
-            (mine ? "mine" : "");
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className =
-            "bubble";
-
-        const date =
-            new Date(data.time);
-
-        const time =
-            date.getHours()
-                .toString()
-                .padStart(2, "0")
-            +
-            ":"
-            +
-            date.getMinutes()
-                .toString()
-                .padStart(2, "0");
-
-        bubble.innerHTML = `
-
-            ${
-                mine
-                ?
-                ""
-                :
-                `
-                <div class="from">
-                    ${escapeHtml(data.from)}
-                </div>
-                `
-            }
-
-            <div>
-                ${escapeHtml(data.message)}
-            </div>
-
-            <div class="time">
-                ${time}
-            </div>
-        `;
-
-        row.appendChild(bubble);
-
-        messagesContainer.appendChild(row);
-    }
-
-    function scrollBottom() {
-
-        messagesContainer.scrollTop =
-            messagesContainer.scrollHeight;
-    }
-
-    /* =====================================
-       MENSAJES PENDIENTES
-    ===================================== */
-
-    socket.on(
-        "pendingMessages",
-        savedMessages => {
-
-            conversations = {};
-
-            unread = {};
-
-            savedMessages.forEach(
-                message => {
-
-                    const other =
-                        message.from ===
-                        myUsername
-
-                        ? message.to
-
-                        : message.from;
-
-                    if (
-                        !conversations[other]
-                    ) {
-                        conversations[other] =
-                            [];
-                    }
-
-                    conversations[other]
-                        .push(message);
-
-                    if (
-                        message.from !==
-                        myUsername &&
-                        !message.read &&
-                        selectedUser !==
-                        other
-                    ) {
-
-                        unread[other] =
-                            (
-                                unread[other] ||
-                                0
-                            ) + 1;
-                    }
-
-                }
-            );
-
-            renderUsers();
-
-            if (selectedUser) {
-
-                renderConversation(
-                    selectedUser
-                );
-            }
-        }
-    );
-
-    /* =====================================
-       RECIBIR MENSAJE
-    ===================================== */
-
-    socket.on(
-        "privateMessage",
-        data => {
-
-            const other =
-                data.from === myUsername
-                    ? data.to
-                    : data.from;
-
-            if (
-                !conversations[other]
-            ) {
-                conversations[other] =
-                    [];
-            }
-
-            const exists =
-                conversations[other]
-                    .some(
-                        message =>
-                            message.id ===
-                            data.id
-                    );
-
-            if (!exists) {
-
-                conversations[other]
-                    .push(data);
-
-            }
-
-            // Si estoy viendo este chat
-            if (
-                selectedUser === other
-            ) {
-
-                addMessageToScreen(data);
-
-                scrollBottom();
-
-                socket.emit(
-                    "markConversationRead",
-                    {
-                        username: other
-                    }
-                );
-
-            } else {
-
-                unread[other] =
-                    (unread[other] || 0) + 1;
-
-                renderUsers();
-
-                showNotification(
-                    data.from,
-                    data.message,
-                    other
-                );
-            }
-        }
-    );
-
-    /* =====================================
-       MENSAJE ENVIADO
-    ===================================== */
-
-    socket.on(
-        "messageSent",
-        data => {
-
-            const other =
-                data.to;
-
-            if (
-                !conversations[other]
-            ) {
-                conversations[other] =
-                    [];
-            }
-
-            const exists =
-                conversations[other]
-                    .some(
-                        message =>
-                            message.id ===
-                            data.id
-                    );
-
-            if (!exists) {
-
-                conversations[other]
-                    .push(data);
-            }
-
-            if (
-                selectedUser === other
-            ) {
-
-                addMessageToScreen(data);
-
-                scrollBottom();
-            }
-        }
-    );
-
-    /* =====================================
-       ENVIAR
-    ===================================== */
-
-    sendButton.addEventListener(
+// ==========================================
+// VOLVER EN MÓVIL
+// ==========================================
+
+document
+    .getElementById("backButton")
+    .addEventListener(
         "click",
-        sendMessage
-    );
+        () => {
 
-    messageInput.addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-
-                sendMessage();
-
-            }
+            layout.classList.remove(
+                "mobileChat"
+            );
         }
     );
 
-    function sendMessage() {
+// ==========================================
+// SEGURIDAD HTML
+// ==========================================
 
-        const message =
-            messageInput.value.trim();
+function escapeHtml(text) {
 
-        if (
-            !message ||
-            !selectedUser
-        ) {
-            return;
-        }
+    const div =
+        document.createElement("div");
 
-        socket.emit(
-            "privateMessage",
-            {
-                to: selectedUser,
-                message
-            }
-        );
+    div.textContent =
+        String(text);
 
-        messageInput.value = "";
+    return div.innerHTML;
+}
 
-        messageInput.focus();
-    }
+// ==========================================
+// ARRANCAR
+// ==========================================
 
-    /* =====================================
-       NOTIFICACIONES DENTRO DE LA APP
-    ===================================== */
-
-    function showNotification(
-        from,
-        text,
-        username
-    ) {
-
-        const notification =
-            document.createElement("div");
-
-        notification.className =
-            "notification";
-
-        notification.innerHTML = `
-
-            <div class="notificationTitle">
-                💬 ${escapeHtml(from)}
-            </div>
-
-            <div class="notificationText">
-                ${escapeHtml(text)}
-            </div>
-        `;
-
-        notification.addEventListener(
-            "click",
-            () => {
-
-                openChat(username);
-
-                notification.remove();
-            }
-        );
-
-        notifications.appendChild(
-            notification
-        );
-
-        setTimeout(
-            () => notification.remove(),
-            6000
-        );
-    }
-
-    /* =====================================
-       CERRAR SESIÓN
-    ===================================== */
-
-    document
-        .getElementById("logoutButton")
-        .addEventListener(
-            "click",
-            async () => {
-
-                const token =
-                    localStorage.getItem(
-                        "chatToken"
-                    );
-
-                try {
-
-                    await fetch(
-                        "/api/logout",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                Authorization:
-                                    "Bearer " +
-                                    token
-                            }
-                        }
-                    );
-
-                } catch {}
-
-                localStorage.removeItem(
-                    "chatToken"
-                );
-
-                localStorage.removeItem(
-                    "chatUsername"
-                );
-
-                socket.disconnect();
-
-                location.reload();
-            }
-        );
-
-    /* =====================================
-       VOLVER EN MÓVIL
-    ===================================== */
-
-    document
-        .getElementById("backButton")
-        .addEventListener(
-            "click",
-            () => {
-
-                layout.classList.remove(
-                    "mobileChat"
-                );
-            }
-        );
-
-    /* =====================================
-       ESCAPE HTML
-    ===================================== */
-
-    function escapeHtml(text) {
-
-        const div =
-            document.createElement("div");
-
-        div.textContent =
-            String(text);
-
-        return div.innerHTML;
-    }
-
-    /* =====================================
-       ARRANCAR
-    ===================================== */
-
-    checkSavedSession();
+checkSavedSession();
 
 </script>
 
 </body>
+
 </html>
