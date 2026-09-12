@@ -11,26 +11,18 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
-// ==========================================
-// CARPETA Y ARCHIVOS DE DATOS
-// ==========================================
-
 const DATA_DIR = path.join(__dirname, "data");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 const MESSAGES_FILE = path.join(DATA_DIR, "messages.json");
 const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json");
 
 if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR);
+    fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-function ensureFile(file, defaultValue) {
+function ensureFile(file, value) {
     if (!fs.existsSync(file)) {
-        fs.writeFileSync(
-            file,
-            JSON.stringify(defaultValue, null, 2),
-            "utf8"
-        );
+        fs.writeFileSync(file, JSON.stringify(value, null, 2), "utf8");
     }
 }
 
@@ -38,126 +30,83 @@ ensureFile(USERS_FILE, []);
 ensureFile(MESSAGES_FILE, []);
 ensureFile(SESSIONS_FILE, {});
 
-// ==========================================
-// LECTURA Y ESCRITURA
-// ==========================================
+function loadJSON(file, fallback) {
+    try {
+        return JSON.parse(fs.readFileSync(file, "utf8"));
+    } catch {
+        return fallback;
+    }
+}
+
+function saveJSON(file, data) {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2), "utf8");
+}
 
 function loadUsers() {
-    try {
-        return JSON.parse(
-            fs.readFileSync(USERS_FILE, "utf8")
-        );
-    } catch {
-        return [];
-    }
+    return loadJSON(USERS_FILE, []);
 }
 
 function saveUsers(users) {
-    fs.writeFileSync(
-        USERS_FILE,
-        JSON.stringify(users, null, 2),
-        "utf8"
-    );
+    saveJSON(USERS_FILE, users);
 }
 
 function loadMessages() {
-    try {
-        return JSON.parse(
-            fs.readFileSync(MESSAGES_FILE, "utf8")
-        );
-    } catch {
-        return [];
-    }
+    return loadJSON(MESSAGES_FILE, []);
 }
 
 function saveMessages(messages) {
-    fs.writeFileSync(
-        MESSAGES_FILE,
-        JSON.stringify(messages, null, 2),
-        "utf8"
-    );
+    saveJSON(MESSAGES_FILE, messages);
 }
 
 function loadSessions() {
-    try {
-        return JSON.parse(
-            fs.readFileSync(SESSIONS_FILE, "utf8")
-        );
-    } catch {
-        return {};
-    }
+    return loadJSON(SESSIONS_FILE, {});
 }
 
 function saveSessions(sessions) {
-    fs.writeFileSync(
-        SESSIONS_FILE,
-        JSON.stringify(sessions, null, 2),
-        "utf8"
-    );
+    saveJSON(SESSIONS_FILE, sessions);
 }
 
-// ==========================================
-// UTILIDADES
-// ==========================================
-
 function normalizeUsername(username) {
-    return String(username || "")
-        .trim()
-        .toLowerCase();
+    return String(username || "").trim().toLowerCase();
 }
 
 function getUser(username) {
     const normalized = normalizeUsername(username);
 
     return loadUsers().find(
-        user => user.username === normalized
+        user => normalizeUsername(user.username) === normalized
     );
 }
-
-// ==========================================
-// CONTRASEÑAS
-// ==========================================
 
 function createPasswordHash(password) {
-    const salt = crypto
-        .randomBytes(16)
-        .toString("hex");
+    const salt = crypto.randomBytes(16).toString("hex");
 
     const hash = crypto
         .scryptSync(password, salt, 64)
         .toString("hex");
 
-    return {
-        salt,
-        hash
-    };
+    return { salt, hash };
 }
 
-function verifyPassword(
-    password,
-    salt,
-    storedHash
-) {
-    const hash = crypto
-        .scryptSync(password, salt, 64)
-        .toString("hex");
+function verifyPassword(password, salt, storedHash) {
+    try {
+        const hash = crypto
+            .scryptSync(password, salt, 64)
+            .toString("hex");
 
-    return crypto.timingSafeEqual(
-        Buffer.from(hash, "hex"),
-        Buffer.from(storedHash, "hex")
-    );
+        return crypto.timingSafeEqual(
+            Buffer.from(hash, "hex"),
+            Buffer.from(storedHash, "hex")
+        );
+    } catch {
+        return false;
+    }
 }
-
-// ==========================================
-// SESIONES
-// ==========================================
 
 function createSession(username) {
     const sessions = loadSessions();
 
-    const token = crypto
-        .randomBytes(32)
-        .toString("hex");
+    const token = crypto.randomBytes(32).toString("hex");
 
     sessions[token] = {
         username,
@@ -170,9 +119,7 @@ function createSession(username) {
 }
 
 function getSession(token) {
-    if (!token) {
-        return null;
-    }
+    if (!token) return null;
 
     const sessions = loadSessions();
 
@@ -180,9 +127,7 @@ function getSession(token) {
 }
 
 function deleteSession(token) {
-    if (!token) {
-        return;
-    }
+    if (!token) return;
 
     const sessions = loadSessions();
 
@@ -191,78 +136,51 @@ function deleteSession(token) {
     saveSessions(sessions);
 }
 
-// ==========================================
-// EXPRESS
-// ==========================================
-
 app.use(express.json());
-
-app.use(
-    express.static(
-        path.join(__dirname, "public")
-    )
-);
+app.use(express.static(path.join(__dirname, "public")));
 
 // ==========================================
 // REGISTRO
 // ==========================================
 
 app.post("/api/register", (req, res) => {
-
-    const displayName =
-        String(req.body.username || "").trim();
-
-    const password =
-        String(req.body.password || "");
+    const displayName = String(req.body.username || "").trim();
+    const password = String(req.body.password || "");
 
     if (displayName.length < 3) {
         return res.status(400).json({
-            error:
-                "El nombre debe tener al menos 3 caracteres."
+            error: "El nombre debe tener al menos 3 caracteres."
         });
     }
 
     if (displayName.length > 24) {
         return res.status(400).json({
-            error:
-                "El nombre puede tener como máximo 24 caracteres."
+            error: "El nombre puede tener como máximo 24 caracteres."
         });
     }
 
-    if (
-        !/^[a-zA-Z0-9_]+$/.test(displayName)
-    ) {
+    if (!/^[a-zA-Z0-9_]+$/.test(displayName)) {
         return res.status(400).json({
-            error:
-                "El nombre solo puede usar letras, números y _."
+            error: "El nombre solo puede usar letras, números y _."
         });
     }
 
     if (password.length < 6) {
         return res.status(400).json({
-            error:
-                "La contraseña debe tener al menos 6 caracteres."
+            error: "La contraseña debe tener al menos 6 caracteres."
         });
     }
 
-    const username =
-        normalizeUsername(displayName);
-
+    const username = normalizeUsername(displayName);
     const users = loadUsers();
 
-    const exists = users.some(
-        user => user.username === username
-    );
-
-    if (exists) {
+    if (users.some(user => normalizeUsername(user.username) === username)) {
         return res.status(400).json({
-            error:
-                "Ese usuario ya existe."
+            error: "Ese usuario ya existe."
         });
     }
 
-    const passwordData =
-        createPasswordHash(password);
+    const passwordData = createPasswordHash(password);
 
     users.push({
         username,
@@ -274,17 +192,15 @@ app.post("/api/register", (req, res) => {
 
     saveUsers(users);
 
-    const token =
-        createSession(username);
+    const token = createSession(username);
+
+    sendUserList();
 
     res.json({
         success: true,
         username: displayName,
         token
     });
-
-    // Actualizar lista para todos
-    sendUserList();
 });
 
 // ==========================================
@@ -292,51 +208,18 @@ app.post("/api/register", (req, res) => {
 // ==========================================
 
 app.post("/api/login", (req, res) => {
+    const username = normalizeUsername(req.body.username);
+    const password = String(req.body.password || "");
 
-    const username =
-        normalizeUsername(
-            req.body.username
-        );
+    const user = getUser(username);
 
-    const password =
-        String(req.body.password || "");
-
-    const user =
-        getUser(username);
-
-    if (!user) {
+    if (!user || !verifyPassword(password, user.salt, user.passwordHash)) {
         return res.status(401).json({
-            error:
-                "Usuario o contraseña incorrectos."
+            error: "Usuario o contraseña incorrectos."
         });
     }
 
-    try {
-
-        const valid =
-            verifyPassword(
-                password,
-                user.salt,
-                user.passwordHash
-            );
-
-        if (!valid) {
-            return res.status(401).json({
-                error:
-                    "Usuario o contraseña incorrectos."
-            });
-        }
-
-    } catch {
-
-        return res.status(401).json({
-            error:
-                "Usuario o contraseña incorrectos."
-        });
-    }
-
-    const token =
-        createSession(user.username);
+    const token = createSession(user.username);
 
     res.json({
         success: true,
@@ -350,17 +233,13 @@ app.post("/api/login", (req, res) => {
 // ==========================================
 
 app.get("/api/session", (req, res) => {
+    const authorization = req.headers.authorization || "";
 
-    const auth =
-        req.headers.authorization || "";
+    const token = authorization.startsWith("Bearer ")
+        ? authorization.slice(7)
+        : "";
 
-    const token =
-        auth.startsWith("Bearer ")
-            ? auth.slice(7)
-            : "";
-
-    const session =
-        getSession(token);
+    const session = getSession(token);
 
     if (!session) {
         return res.status(401).json({
@@ -368,11 +247,9 @@ app.get("/api/session", (req, res) => {
         });
     }
 
-    const user =
-        getUser(session.username);
+    const user = getUser(session.username);
 
     if (!user) {
-
         deleteSession(token);
 
         return res.status(401).json({
@@ -382,24 +259,20 @@ app.get("/api/session", (req, res) => {
 
     res.json({
         loggedIn: true,
-        username: user.displayName,
-        token
+        username: user.displayName
     });
 });
 
 // ==========================================
-// LOGOUT
+// CERRAR SESIÓN
 // ==========================================
 
 app.post("/api/logout", (req, res) => {
+    const authorization = req.headers.authorization || "";
 
-    const auth =
-        req.headers.authorization || "";
-
-    const token =
-        auth.startsWith("Bearer ")
-            ? auth.slice(7)
-            : "";
+    const token = authorization.startsWith("Bearer ")
+        ? authorization.slice(7)
+        : "";
 
     deleteSession(token);
 
@@ -410,10 +283,10 @@ app.post("/api/logout", (req, res) => {
 
 // ==========================================
 // USUARIOS CONECTADOS
-// socket.id -> username
 // ==========================================
 
 const onlineUsers = new Map();
+// socket.id -> username
 
 // ==========================================
 // SOCKET.IO
@@ -421,428 +294,270 @@ const onlineUsers = new Map();
 
 io.on("connection", socket => {
 
-    console.log(
-        "Nueva conexión:",
-        socket.id
-    );
+    socket.on("authenticate", token => {
 
-    // ======================================
-    // AUTENTICAR SOCKET
-    // ======================================
+        const session = getSession(token);
 
-    socket.on(
-        "authenticate",
-        token => {
+        if (!session) {
+            socket.emit("authenticationError");
+            return;
+        }
 
-            const session =
-                getSession(token);
+        const user = getUser(session.username);
 
-            if (!session) {
-                socket.emit(
-                    "authenticationError"
-                );
-                return;
-            }
+        if (!user) {
+            socket.emit("authenticationError");
+            return;
+        }
 
-            const user =
-                getUser(
-                    session.username
-                );
+        // Quitar conexiones anteriores del mismo usuario
+        for (const [socketId, username] of onlineUsers.entries()) {
 
-            if (!user) {
-                socket.emit(
-                    "authenticationError"
-                );
-                return;
-            }
-
-            // Evitar dos conexiones simultáneas
-            for (
-                const [
-                    socketId,
-                    username
-                ]
-                of onlineUsers.entries()
+            if (
+                normalizeUsername(username) === normalizeUsername(user.username) &&
+                socketId !== socket.id
             ) {
+                onlineUsers.delete(socketId);
 
-                if (
-                    username ===
-                    user.username &&
-                    socketId !== socket.id
-                ) {
+                const oldSocket = io.sockets.sockets.get(socketId);
 
-                    onlineUsers.delete(
-                        socketId
-                    );
-
-                    const oldSocket =
-                        io.sockets.sockets.get(
-                            socketId
-                        );
-
-                    if (oldSocket) {
-                        oldSocket.disconnect(
-                            true
-                        );
-                    }
+                if (oldSocket) {
+                    oldSocket.disconnect(true);
                 }
             }
-
-            onlineUsers.set(
-                socket.id,
-                user.username
-            );
-
-            socket.emit(
-                "authenticated",
-                {
-                    username:
-                        user.displayName
-                }
-            );
-
-            sendUserList();
-
-            // Enviar contador de no leídos
-            sendUnreadCounts(
-                socket,
-                user.username
-            );
-
-            console.log(
-                `${user.displayName} está en línea.`
-            );
         }
-    );
+
+        onlineUsers.set(socket.id, user.username);
+
+        socket.emit("authenticated", {
+            username: user.displayName
+        });
+
+        // MUY IMPORTANTE:
+        // enviar inmediatamente TODOS los usuarios
+        sendUserList();
+
+        sendUnreadCounts(socket, user.username);
+    });
 
     // ======================================
-    // SOLICITAR HISTORIAL
+    // HISTORIAL
     // ======================================
 
-    socket.on(
-        "getConversation",
-        otherUsername => {
+    socket.on("getConversation", otherUsername => {
 
-            const currentUser =
-                onlineUsers.get(
-                    socket.id
-                );
+        const currentUser = onlineUsers.get(socket.id);
 
-            if (!currentUser) {
-                return;
-            }
+        if (!currentUser) return;
 
-            const other =
-                normalizeUsername(
-                    otherUsername
-                );
+        const other = normalizeUsername(otherUsername);
 
-            const allMessages =
-                loadMessages();
+        const allMessages = loadMessages();
 
-            const conversation =
-                allMessages.filter(msg => {
+        const conversation = allMessages.filter(msg => {
 
-                    return (
-                        (
-                            msg.from === currentUser &&
-                            msg.to === other
-                        )
-                        ||
-                        (
-                            msg.from === other &&
-                            msg.to === currentUser
-                        )
-                    );
-                });
-
-            socket.emit(
-                "conversationHistory",
-                {
-                    username: other,
-                    messages: conversation
-                }
+            return (
+                (
+                    normalizeUsername(msg.from) === normalizeUsername(currentUser) &&
+                    normalizeUsername(msg.to) === other
+                )
+                ||
+                (
+                    normalizeUsername(msg.from) === other &&
+                    normalizeUsername(msg.to) === normalizeUsername(currentUser)
+                )
             );
-        }
-    );
+        });
+
+        socket.emit("conversationHistory", {
+            username: other,
+            messages: conversation
+        });
+    });
 
     // ======================================
     // ENVIAR MENSAJE
     // ======================================
 
-    socket.on(
-        "privateMessage",
-        ({ to, message }) => {
+    socket.on("privateMessage", data => {
 
-            const sender =
-                onlineUsers.get(
-                    socket.id
-                );
+        const sender = onlineUsers.get(socket.id);
 
-            if (!sender) {
-                socket.emit(
-                    "messageError",
-                    "No estás conectado."
-                );
-                return;
-            }
+        if (!sender) {
+            socket.emit("messageError", "No estás conectado.");
+            return;
+        }
 
-            const target =
-                normalizeUsername(to);
+        const target = normalizeUsername(data?.to);
+        const text = String(data?.message || "").trim();
 
-            const text =
-                String(
-                    message || ""
-                ).trim();
+        if (!target || !text) return;
 
-            if (!target || !text) {
-                return;
-            }
+        const targetUser = getUser(target);
 
-            const targetUser =
-                getUser(target);
-
-            if (!targetUser) {
-                socket.emit(
-                    "messageError",
-                    "Ese usuario no existe."
-                );
-                return;
-            }
-
-            const messageData = {
-
-                id:
-                    Date.now() +
-                    "-" +
-                    crypto
-                        .randomBytes(5)
-                        .toString("hex"),
-
-                from: sender,
-
-                to: target,
-
-                message: text,
-
-                time:
-                    new Date().toISOString(),
-
-                read: false
-            };
-
-            // GUARDAR SIEMPRE
-            const allMessages =
-                loadMessages();
-
-            allMessages.push(
-                messageData
+        if (!targetUser) {
+            socket.emit(
+                "messageError",
+                "Ese usuario no existe."
             );
+            return;
+        }
 
-            saveMessages(
-                allMessages
-            );
+        const messageData = {
+            id:
+                Date.now() +
+                "-" +
+                crypto.randomBytes(5).toString("hex"),
 
-            // Si el destinatario está conectado,
-            // entregarlo inmediatamente.
-            const targetSocket =
-                [...onlineUsers.entries()]
-                    .find(
-                        ([, username]) =>
-                            username === target
-                    );
+            from: normalizeUsername(sender),
+            fromDisplay: getUser(sender)?.displayName || sender,
 
-            if (targetSocket) {
+            to: target,
+            toDisplay: targetUser.displayName,
 
-                io.to(
-                    targetSocket[0]
-                ).emit(
+            message: text,
+            time: new Date().toISOString(),
+            read: false
+        };
+
+        // Guardar permanentemente
+        const allMessages = loadMessages();
+
+        allMessages.push(messageData);
+
+        saveMessages(allMessages);
+
+        // Entrega inmediata si está conectado
+        for (const [socketId, username] of onlineUsers.entries()) {
+
+            if (normalizeUsername(username) === target) {
+
+                io.to(socketId).emit(
                     "privateMessage",
                     messageData
                 );
-            }
 
-            // Confirmación al remitente
-            socket.emit(
-                "messageSent",
-                messageData
-            );
+                break;
+            }
         }
-    );
+
+        // Confirmación al remitente
+        socket.emit(
+            "messageSent",
+            messageData
+        );
+    });
 
     // ======================================
-    // MARCAR COMO LEÍDO
+    // MARCAR LEÍDOS
     // ======================================
 
-    socket.on(
-        "markConversationRead",
-        otherUsername => {
+    socket.on("markConversationRead", otherUsername => {
 
-            const currentUser =
-                onlineUsers.get(
-                    socket.id
-                );
+        const currentUser = onlineUsers.get(socket.id);
 
-            if (!currentUser) {
-                return;
-            }
+        if (!currentUser) return;
 
-            const other =
-                normalizeUsername(
-                    otherUsername
-                );
+        const other = normalizeUsername(otherUsername);
 
-            const allMessages =
-                loadMessages();
+        const allMessages = loadMessages();
 
-            for (
-                const msg of allMessages
+        for (const message of allMessages) {
+
+            if (
+                normalizeUsername(message.from) === other &&
+                normalizeUsername(message.to) === normalizeUsername(currentUser)
             ) {
-
-                if (
-                    msg.from === other &&
-                    msg.to === currentUser
-                ) {
-                    msg.read = true;
-                }
-            }
-
-            saveMessages(
-                allMessages
-            );
-
-            sendUnreadCounts(
-                socket,
-                currentUser
-            );
-        }
-    );
-
-    // ======================================
-    // DESCONEXIÓN
-    // ======================================
-
-    socket.on(
-        "disconnect",
-        () => {
-
-            const username =
-                onlineUsers.get(
-                    socket.id
-                );
-
-            if (username) {
-
-                onlineUsers.delete(
-                    socket.id
-                );
-
-                console.log(
-                    `${username} se ha desconectado.`
-                );
-
-                sendUserList();
+                message.read = true;
             }
         }
-    );
+
+        saveMessages(allMessages);
+
+        sendUnreadCounts(socket, currentUser);
+    });
+
+    // ======================================
+    // DESCONECTAR
+    // ======================================
+
+    socket.on("disconnect", () => {
+
+        onlineUsers.delete(socket.id);
+
+        sendUserList();
+    });
 });
 
 // ==========================================
-// ENVIAR TODOS LOS USUARIOS
+// LISTA DE TODOS LOS USUARIOS
 // ==========================================
 
 function sendUserList() {
 
-    const users =
-        loadUsers();
+    const users = loadUsers();
 
-    const list =
-        users.map(user => {
-
-            const isOnline =
-                [...onlineUsers.values()]
-                    .includes(
-                        user.username
-                    );
-
-            return {
-
-                username:
-                    user.username,
-
-                displayName:
-                    user.displayName,
-
-                online:
-                    isOnline
-            };
-        });
-
-    io.emit(
-        "userList",
-        list
+    const onlineSet = new Set(
+        [...onlineUsers.values()].map(
+            username => normalizeUsername(username)
+        )
     );
+
+    const result = users.map(user => {
+
+        const username = normalizeUsername(user.username);
+
+        return {
+            username,
+            displayName: user.displayName || user.username,
+            online: onlineSet.has(username)
+        };
+    });
+
+    console.log("Usuarios enviados:", result);
+
+    io.emit("userList", result);
 }
 
 // ==========================================
-// ENVIAR CONTADORES DE NO LEÍDOS
+// NO LEÍDOS
 // ==========================================
 
-function sendUnreadCounts(
-    socket,
-    username
-) {
+function sendUnreadCounts(socket, username) {
 
-    const allMessages =
-        loadMessages();
+    const currentUser = normalizeUsername(username);
 
-    const unread = {};
+    const allMessages = loadMessages();
 
-    for (
-        const msg of allMessages
-    ) {
+    const counts = {};
+
+    for (const message of allMessages) {
 
         if (
-            msg.to === username &&
-            !msg.read
+            normalizeUsername(message.to) === currentUser &&
+            message.read !== true
         ) {
+            const from = normalizeUsername(message.from);
 
-            unread[msg.from] =
-                (unread[msg.from] || 0) + 1;
+            counts[from] = (counts[from] || 0) + 1;
         }
     }
 
-    socket.emit(
-        "unreadCounts",
-        unread
-    );
+    socket.emit("unreadCounts", counts);
 }
 
 // ==========================================
 // SERVIDOR
 // ==========================================
 
-server.listen(
-    PORT,
-    "0.0.0.0",
-    () => {
+server.listen(PORT, "0.0.0.0", () => {
 
-        console.log("");
-        console.log(
-            "===================================="
-        );
-        console.log(
-            "             MI CHAT"
-        );
-        console.log(
-            "===================================="
-        );
-        console.log(
-            `http://localhost:${PORT}`
-        );
-        console.log(
-            "===================================="
-        );
-        console.log("");
-    }
-);
+    console.log("");
+    console.log("====================================");
+    console.log("             MI CHAT");
+    console.log("====================================");
+    console.log(`http://localhost:${PORT}`);
+    console.log("====================================");
+    console.log("");
+
+});
