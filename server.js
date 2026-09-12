@@ -78,6 +78,10 @@ function getUser(username) {
     );
 }
 
+// ==========================================
+// CONTRASEÑAS
+// ==========================================
+
 function createPasswordHash(password) {
     const salt = crypto.randomBytes(16).toString("hex");
 
@@ -103,6 +107,10 @@ function verifyPassword(password, salt, storedHash) {
     }
 }
 
+// ==========================================
+// SESIONES
+// ==========================================
+
 function createSession(username) {
     const sessions = loadSessions();
 
@@ -121,9 +129,7 @@ function createSession(username) {
 function getSession(token) {
     if (!token) return null;
 
-    const sessions = loadSessions();
-
-    return sessions[token] || null;
+    return loadSessions()[token] || null;
 }
 
 function deleteSession(token) {
@@ -136,6 +142,10 @@ function deleteSession(token) {
     saveSessions(sessions);
 }
 
+// ==========================================
+// EXPRESS
+// ==========================================
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -144,8 +154,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // ==========================================
 
 app.post("/api/register", (req, res) => {
-    const displayName = String(req.body.username || "").trim();
-    const password = String(req.body.password || "");
+
+    const displayName =
+        String(req.body.username || "").trim();
+
+    const password =
+        String(req.body.password || "");
 
     if (displayName.length < 3) {
         return res.status(400).json({
@@ -172,15 +186,22 @@ app.post("/api/register", (req, res) => {
     }
 
     const username = normalizeUsername(displayName);
+
     const users = loadUsers();
 
-    if (users.some(user => normalizeUsername(user.username) === username)) {
+    if (
+        users.some(
+            user =>
+                normalizeUsername(user.username) === username
+        )
+    ) {
         return res.status(400).json({
             error: "Ese usuario ya existe."
         });
     }
 
-    const passwordData = createPasswordHash(password);
+    const passwordData =
+        createPasswordHash(password);
 
     users.push({
         username,
@@ -192,7 +213,8 @@ app.post("/api/register", (req, res) => {
 
     saveUsers(users);
 
-    const token = createSession(username);
+    const token =
+        createSession(username);
 
     sendUserList();
 
@@ -208,18 +230,30 @@ app.post("/api/register", (req, res) => {
 // ==========================================
 
 app.post("/api/login", (req, res) => {
-    const username = normalizeUsername(req.body.username);
-    const password = String(req.body.password || "");
+
+    const username =
+        normalizeUsername(req.body.username);
+
+    const password =
+        String(req.body.password || "");
 
     const user = getUser(username);
 
-    if (!user || !verifyPassword(password, user.salt, user.passwordHash)) {
+    if (
+        !user ||
+        !verifyPassword(
+            password,
+            user.salt,
+            user.passwordHash
+        )
+    ) {
         return res.status(401).json({
             error: "Usuario o contraseña incorrectos."
         });
     }
 
-    const token = createSession(user.username);
+    const token =
+        createSession(user.username);
 
     res.json({
         success: true,
@@ -233,13 +267,17 @@ app.post("/api/login", (req, res) => {
 // ==========================================
 
 app.get("/api/session", (req, res) => {
-    const authorization = req.headers.authorization || "";
 
-    const token = authorization.startsWith("Bearer ")
-        ? authorization.slice(7)
-        : "";
+    const authorization =
+        req.headers.authorization || "";
 
-    const session = getSession(token);
+    const token =
+        authorization.startsWith("Bearer ")
+            ? authorization.slice(7)
+            : "";
+
+    const session =
+        getSession(token);
 
     if (!session) {
         return res.status(401).json({
@@ -247,9 +285,11 @@ app.get("/api/session", (req, res) => {
         });
     }
 
-    const user = getUser(session.username);
+    const user =
+        getUser(session.username);
 
     if (!user) {
+
         deleteSession(token);
 
         return res.status(401).json({
@@ -264,15 +304,18 @@ app.get("/api/session", (req, res) => {
 });
 
 // ==========================================
-// CERRAR SESIÓN
+// LOGOUT
 // ==========================================
 
 app.post("/api/logout", (req, res) => {
-    const authorization = req.headers.authorization || "";
 
-    const token = authorization.startsWith("Bearer ")
-        ? authorization.slice(7)
-        : "";
+    const authorization =
+        req.headers.authorization || "";
+
+    const token =
+        authorization.startsWith("Bearer ")
+            ? authorization.slice(7)
+            : "";
 
     deleteSession(token);
 
@@ -286,6 +329,7 @@ app.post("/api/logout", (req, res) => {
 // ==========================================
 
 const onlineUsers = new Map();
+
 // socket.id -> username
 
 // ==========================================
@@ -294,32 +338,43 @@ const onlineUsers = new Map();
 
 io.on("connection", socket => {
 
+    // ======================================
+    // AUTENTICAR
+    // ======================================
+
     socket.on("authenticate", token => {
 
-        const session = getSession(token);
+        const session =
+            getSession(token);
 
         if (!session) {
             socket.emit("authenticationError");
             return;
         }
 
-        const user = getUser(session.username);
+        const user =
+            getUser(session.username);
 
         if (!user) {
             socket.emit("authenticationError");
             return;
         }
 
-        // Quitar conexiones anteriores del mismo usuario
-        for (const [socketId, username] of onlineUsers.entries()) {
+        for (
+            const [socketId, username]
+            of onlineUsers.entries()
+        ) {
 
             if (
-                normalizeUsername(username) === normalizeUsername(user.username) &&
+                normalizeUsername(username) ===
+                normalizeUsername(user.username) &&
                 socketId !== socket.id
             ) {
+
                 onlineUsers.delete(socketId);
 
-                const oldSocket = io.sockets.sockets.get(socketId);
+                const oldSocket =
+                    io.sockets.sockets.get(socketId);
 
                 if (oldSocket) {
                     oldSocket.disconnect(true);
@@ -327,159 +382,290 @@ io.on("connection", socket => {
             }
         }
 
-        onlineUsers.set(socket.id, user.username);
+        onlineUsers.set(
+            socket.id,
+            user.username
+        );
 
         socket.emit("authenticated", {
             username: user.displayName
         });
 
-        // MUY IMPORTANTE:
-        // enviar inmediatamente TODOS los usuarios
         sendUserList();
 
-        sendUnreadCounts(socket, user.username);
+        sendUnreadCounts(
+            socket,
+            user.username
+        );
+    });
+
+    // ======================================
+    // COMPROBAR USUARIO PARA NUEVO CHAT
+    // ======================================
+
+    socket.on("findUser", username => {
+
+        const currentUser =
+            onlineUsers.get(socket.id);
+
+        if (!currentUser) {
+            return;
+        }
+
+        const target =
+            normalizeUsername(username);
+
+        if (!target) {
+            socket.emit("userNotFound");
+            return;
+        }
+
+        if (
+            target ===
+            normalizeUsername(currentUser)
+        ) {
+            socket.emit(
+                "userFoundError",
+                "No puedes contactar contigo mismo."
+            );
+            return;
+        }
+
+        const user =
+            getUser(target);
+
+        if (!user) {
+            socket.emit("userNotFound");
+            return;
+        }
+
+        const online =
+            [...onlineUsers.values()]
+                .some(
+                    username =>
+                        normalizeUsername(username) ===
+                        target
+                );
+
+        socket.emit("userFound", {
+            username: user.username,
+            displayName: user.displayName,
+            online
+        });
     });
 
     // ======================================
     // HISTORIAL
     // ======================================
 
-    socket.on("getConversation", otherUsername => {
+    socket.on(
+        "getConversation",
+        otherUsername => {
 
-        const currentUser = onlineUsers.get(socket.id);
+            const currentUser =
+                onlineUsers.get(socket.id);
 
-        if (!currentUser) return;
+            if (!currentUser) return;
 
-        const other = normalizeUsername(otherUsername);
+            const other =
+                normalizeUsername(otherUsername);
 
-        const allMessages = loadMessages();
+            const user =
+                getUser(other);
 
-        const conversation = allMessages.filter(msg => {
+            if (!user) {
+                return;
+            }
 
-            return (
-                (
-                    normalizeUsername(msg.from) === normalizeUsername(currentUser) &&
-                    normalizeUsername(msg.to) === other
-                )
-                ||
-                (
-                    normalizeUsername(msg.from) === other &&
-                    normalizeUsername(msg.to) === normalizeUsername(currentUser)
-                )
+            const allMessages =
+                loadMessages();
+
+            const conversation =
+                allMessages.filter(msg => {
+
+                    return (
+                        (
+                            normalizeUsername(msg.from) ===
+                            normalizeUsername(currentUser) &&
+                            normalizeUsername(msg.to) ===
+                            other
+                        )
+                        ||
+                        (
+                            normalizeUsername(msg.from) ===
+                            other &&
+                            normalizeUsername(msg.to) ===
+                            normalizeUsername(currentUser)
+                        )
+                    );
+                });
+
+            socket.emit(
+                "conversationHistory",
+                {
+                    username: other,
+                    messages: conversation
+                }
             );
-        });
-
-        socket.emit("conversationHistory", {
-            username: other,
-            messages: conversation
-        });
-    });
+        }
+    );
 
     // ======================================
     // ENVIAR MENSAJE
     // ======================================
 
-    socket.on("privateMessage", data => {
+    socket.on(
+        "privateMessage",
+        data => {
 
-        const sender = onlineUsers.get(socket.id);
+            const sender =
+                onlineUsers.get(socket.id);
 
-        if (!sender) {
-            socket.emit("messageError", "No estás conectado.");
-            return;
-        }
+            if (!sender) {
+                socket.emit(
+                    "messageError",
+                    "No estás conectado."
+                );
+                return;
+            }
 
-        const target = normalizeUsername(data?.to);
-        const text = String(data?.message || "").trim();
+            const target =
+                normalizeUsername(data?.to);
 
-        if (!target || !text) return;
+            const text =
+                String(
+                    data?.message || ""
+                ).trim();
 
-        const targetUser = getUser(target);
+            if (!target || !text) {
+                return;
+            }
 
-        if (!targetUser) {
-            socket.emit(
-                "messageError",
-                "Ese usuario no existe."
+            const targetUser =
+                getUser(target);
+
+            if (!targetUser) {
+                socket.emit(
+                    "messageError",
+                    "Ese usuario no existe."
+                );
+                return;
+            }
+
+            const messageData = {
+
+                id:
+                    Date.now() +
+                    "-" +
+                    crypto
+                        .randomBytes(5)
+                        .toString("hex"),
+
+                from:
+                    normalizeUsername(sender),
+
+                fromDisplay:
+                    getUser(sender)?.displayName ||
+                    sender,
+
+                to:
+                    target,
+
+                toDisplay:
+                    targetUser.displayName,
+
+                message:
+                    text,
+
+                time:
+                    new Date().toISOString(),
+
+                read:
+                    false
+            };
+
+            const messages =
+                loadMessages();
+
+            messages.push(
+                messageData
             );
-            return;
+
+            saveMessages(messages);
+
+            // Entregar inmediatamente
+            for (
+                const [socketId, username]
+                of onlineUsers.entries()
+            ) {
+
+                if (
+                    normalizeUsername(username) ===
+                    target
+                ) {
+
+                    io.to(socketId).emit(
+                        "privateMessage",
+                        messageData
+                    );
+
+                    break;
+                }
+            }
+
+            socket.emit(
+                "messageSent",
+                messageData
+            );
         }
+    );
 
-        const messageData = {
-            id:
-                Date.now() +
-                "-" +
-                crypto.randomBytes(5).toString("hex"),
+    // ======================================
+    // MARCAR COMO LEÍDO
+    // ======================================
 
-            from: normalizeUsername(sender),
-            fromDisplay: getUser(sender)?.displayName || sender,
+    socket.on(
+        "markConversationRead",
+        otherUsername => {
 
-            to: target,
-            toDisplay: targetUser.displayName,
+            const currentUser =
+                onlineUsers.get(socket.id);
 
-            message: text,
-            time: new Date().toISOString(),
-            read: false
-        };
+            if (!currentUser) return;
 
-        // Guardar permanentemente
-        const allMessages = loadMessages();
-
-        allMessages.push(messageData);
-
-        saveMessages(allMessages);
-
-        // Entrega inmediata si está conectado
-        for (const [socketId, username] of onlineUsers.entries()) {
-
-            if (normalizeUsername(username) === target) {
-
-                io.to(socketId).emit(
-                    "privateMessage",
-                    messageData
+            const other =
+                normalizeUsername(
+                    otherUsername
                 );
 
-                break;
+            const messages =
+                loadMessages();
+
+            for (const message of messages) {
+
+                if (
+                    normalizeUsername(
+                        message.from
+                    ) === other &&
+                    normalizeUsername(
+                        message.to
+                    ) ===
+                    normalizeUsername(
+                        currentUser
+                    )
+                ) {
+                    message.read = true;
+                }
             }
+
+            saveMessages(messages);
+
+            sendUnreadCounts(
+                socket,
+                currentUser
+            );
         }
-
-        // Confirmación al remitente
-        socket.emit(
-            "messageSent",
-            messageData
-        );
-    });
-
-    // ======================================
-    // MARCAR LEÍDOS
-    // ======================================
-
-    socket.on("markConversationRead", otherUsername => {
-
-        const currentUser = onlineUsers.get(socket.id);
-
-        if (!currentUser) return;
-
-        const other = normalizeUsername(otherUsername);
-
-        const allMessages = loadMessages();
-
-        for (const message of allMessages) {
-
-            if (
-                normalizeUsername(message.from) === other &&
-                normalizeUsername(message.to) === normalizeUsername(currentUser)
-            ) {
-                message.read = true;
-            }
-        }
-
-        saveMessages(allMessages);
-
-        sendUnreadCounts(socket, currentUser);
-    });
-
-    // ======================================
-    // DESCONECTAR
-    // ======================================
+    );
 
     socket.on("disconnect", () => {
 
@@ -490,74 +676,114 @@ io.on("connection", socket => {
 });
 
 // ==========================================
-// LISTA DE TODOS LOS USUARIOS
+// TODOS LOS USUARIOS
 // ==========================================
 
 function sendUserList() {
 
-    const users = loadUsers();
+    const users =
+        loadUsers();
 
-    const onlineSet = new Set(
-        [...onlineUsers.values()].map(
-            username => normalizeUsername(username)
-        )
+    const onlineSet =
+        new Set(
+            [...onlineUsers.values()]
+                .map(
+                    username =>
+                        normalizeUsername(username)
+                )
+        );
+
+    const result =
+        users.map(user => {
+
+            const username =
+                normalizeUsername(
+                    user.username
+                );
+
+            return {
+                username,
+                displayName:
+                    user.displayName ||
+                    user.username,
+                online:
+                    onlineSet.has(username)
+            };
+        });
+
+    io.emit(
+        "userList",
+        result
     );
-
-    const result = users.map(user => {
-
-        const username = normalizeUsername(user.username);
-
-        return {
-            username,
-            displayName: user.displayName || user.username,
-            online: onlineSet.has(username)
-        };
-    });
-
-    console.log("Usuarios enviados:", result);
-
-    io.emit("userList", result);
 }
 
 // ==========================================
 // NO LEÍDOS
 // ==========================================
 
-function sendUnreadCounts(socket, username) {
+function sendUnreadCounts(
+    socket,
+    username
+) {
 
-    const currentUser = normalizeUsername(username);
+    const currentUser =
+        normalizeUsername(username);
 
-    const allMessages = loadMessages();
+    const messages =
+        loadMessages();
 
     const counts = {};
 
-    for (const message of allMessages) {
+    for (const message of messages) {
 
         if (
-            normalizeUsername(message.to) === currentUser &&
+            normalizeUsername(
+                message.to
+            ) === currentUser &&
             message.read !== true
         ) {
-            const from = normalizeUsername(message.from);
 
-            counts[from] = (counts[from] || 0) + 1;
+            const from =
+                normalizeUsername(
+                    message.from
+                );
+
+            counts[from] =
+                (counts[from] || 0) + 1;
         }
     }
 
-    socket.emit("unreadCounts", counts);
+    socket.emit(
+        "unreadCounts",
+        counts
+    );
 }
 
 // ==========================================
 // SERVIDOR
 // ==========================================
 
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
 
-    console.log("");
-    console.log("====================================");
-    console.log("             MI CHAT");
-    console.log("====================================");
-    console.log(`http://localhost:${PORT}`);
-    console.log("====================================");
-    console.log("");
-
-});
+        console.log("");
+        console.log(
+            "===================================="
+        );
+        console.log(
+            "             MI CHAT"
+        );
+        console.log(
+            "===================================="
+        );
+        console.log(
+            `http://localhost:${PORT}`
+        );
+        console.log(
+            "===================================="
+        );
+        console.log("");
+    }
+);
