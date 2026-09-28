@@ -1,0 +1,20 @@
+{
+  "name": "chat-app-pulse",
+  "version": "1.0.0",
+  "description": "Aplicación de Chat en tiempo real lista para GitHub y Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["chat", "socket.io", "express", "render", "github"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
