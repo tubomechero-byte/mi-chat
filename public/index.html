@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatPulse - Chat en Tiempo Real</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="logo-icon"><i class="fa-solid fa-comments"></i></div>
+        <h2>Bienvenido a ChatPulse</h2>
+        <p>Ingresa tu nombre para conectarte al chat</p>
+      </div>
+      <form id="login-form">
+        <input type="text" id="username-input" placeholder="Ej. Raúl" required maxlength="20" autofocus>
+        <button type="submit" class="btn-primary">Entrar al Chat <i class="fa-solid fa-arrow-right"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-container hidden" id="app-container">
+    
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-bolt brand-icon"></i>
+        <span>ChatPulse</span>
+      </div>
+
+      <div class="section-title">Canales</div>
+      <ul class="channels-list">
+        <li class="channel-item active" data-room="general">
+          <i class="fa-solid fa-hashtag"></i> general
+        </li>
+        <li class="channel-item" data-room="tecnologia">
+          <i class="fa-solid fa-hashtag"></i> tecnologia
+        </li>
+        <li class="channel-item" data-room="proyectos">
+          <i class="fa-solid fa-hashtag"></i> proyectos
+        </li>
+        <li class="channel-item" data-room="random">
+          <i class="fa-solid fa-hashtag"></i> random
+        </li>
+      </ul>
+
+      <div class="section-title d-flex justify-between align-center">
+        <span>Usuarios en línea</span>
+        <span class="user-badge" id="online-count">0</span>
+      </div>
+      <ul class="users-list" id="users-list"></ul>
+
+      <div class="current-user-profile">
+        <div class="avatar" id="my-avatar">U</div>
+        <div class="user-info">
+          <span class="user-name" id="my-username">Cargando...</span>
+          <span class="user-status"><span class="status-dot online"></span> En línea</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="chat-area">
+      <header class="chat-header">
+        <div class="chat-title-info">
+          <h3 id="current-chat-title"><i class="fa-solid fa-hashtag"></i> general</h3>
+          <p id="current-chat-subtitle">Canal público principal</p>
+        </div>
+        <div class="chat-actions">
+          <button class="icon-btn" id="sound-toggle" title="Alternar sonido">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="messages-container" id="messages-container"></div>
+
+      <div class="typing-indicator hidden" id="typing-indicator">
+        <span id="typing-text">Alguien está escribiendo...</span>
+      </div>
+
+      <footer class="chat-input-area">
+        <form id="message-form">
+          <button type="button" class="btn-emoji" id="emoji-btn" title="Emojis">
+            <i class="fa-regular fa-face-smile"></i>
+          </button>
+          <input type="text" id="message-input" placeholder="Escribe un mensaje en #general..." autocomplete="off">
+          <button type="submit" class="btn-send" title="Enviar">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+
+        <div class="emoji-picker hidden" id="emoji-picker">
+          <span>😀</span><span>😂</span><span>🔥</span><span>👍</span><span>❤️</span><span>🚀</span><span>💻</span><span>🎉</span><span>⚡</span><span>😎</span>
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
